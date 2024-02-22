@@ -6,6 +6,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { EscolaModule } from './escola/escola.module';
 import { ModalidadeModule } from './modalidade/modalidade.module';
+import { SerieModule } from './serie/serie.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ModalidadeModule } from './modalidade/modalidade.module';
     NucleoModule,
     EscolaModule,
     ModalidadeModule,
+    SerieModule,
   ],
   controllers: [],
   providers: [],
