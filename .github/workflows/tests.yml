@@ -15,7 +15,4 @@ jobs:
         run: yarn install
 
       - name: Run tests with coverage
-        run: |
-          yarn test --coverage
-          coverage_threshold=$(echo '{"global": {"branches": 65, "functions": 65, "lines": 70, "statements": 70}}' | base64)
-          yarn test --coverage --coverageThreshold=$coverage_threshold
+        run: yarn run test:cov
