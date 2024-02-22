@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateModalidadeDto } from './dto/create-Modalidade.dto';
 import { UpdateModalidadeDto } from './dto/update-Modalidade.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Modalidade } from './entities/Modalidade.entity';
+import { Modalidade } from './entities/modalidade.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

@@ -32,6 +32,6 @@ export class Usuario {
   ativo: boolean;
 
   @ManyToOne(() => Escola, (escola) => escola.usuarios, { nullable: true })
-  @JoinColumn({ name: 'escola_id' })
+  @JoinColumn()
   escola?: Escola;
 }

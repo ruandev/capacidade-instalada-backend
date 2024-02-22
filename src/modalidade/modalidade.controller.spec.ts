@@ -65,7 +65,7 @@ describe('ModalidadeController', () => {
   describe('create', () => {
     it('should create a new modalidade', async () => {
       const dto: CreateModalidadeDto = { nome: 'Modalidade 1' };
-      const result = { id: '1', ...dto, ativo: true };
+      const result = { id: '1', ...dto, ativo: true, escolas: [] };
 
       jest.spyOn(service, 'create').mockResolvedValue(result);
       expect(await controller.create(dto)).toBe(result);
@@ -80,7 +80,9 @@ describe('ModalidadeController', () => {
   });
   describe('findAll', () => {
     it('should return an array of modalidades', async () => {
-      const result = [{ id: '1', nome: 'Modalidade 1', ativo: true }];
+      const result = [
+        { id: '1', nome: 'Modalidade 1', ativo: true, escolas: [] },
+      ];
 
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await controller.findAll()).toBe(result);
@@ -88,7 +90,12 @@ describe('ModalidadeController', () => {
   });
   describe('findOne', () => {
     it('should return a modalidade by ID', async () => {
-      const result = { id: '1', nome: 'Modalidade 1', ativo: true };
+      const result = {
+        id: '1',
+        nome: 'Modalidade 1',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await controller.findOne('1')).toBe(result);
@@ -97,7 +104,12 @@ describe('ModalidadeController', () => {
   describe('update', () => {
     it('should update a modalidade by ID', async () => {
       const dto: UpdateModalidadeDto = { nome: 'Updated Modalidade' };
-      const result = { id: '1', nome: 'Updated Modalidade', ativo: true };
+      const result = {
+        id: '1',
+        nome: 'Updated Modalidade',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(await controller.update('1', dto)).toBe(result);
@@ -111,7 +123,12 @@ describe('ModalidadeController', () => {
   });
   describe('deactivate', () => {
     it('should deactivate a modalidade by ID', async () => {
-      const result = { id: '1', nome: 'Modalidade 1', ativo: false };
+      const result = {
+        id: '1',
+        nome: 'Modalidade 1',
+        ativo: false,
+        escolas: [],
+      };
 
       jest.spyOn(service, 'deactivate').mockResolvedValue(result);
       expect(await controller.deactivate('1')).toBe(result);

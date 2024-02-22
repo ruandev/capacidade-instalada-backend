@@ -45,7 +45,7 @@ describe('ModalidadeService', () => {
   describe('findAll', () => {
     it('should return all modalidades', async () => {
       const modalidades: Modalidade[] = [
-        { id: '1', nome: 'Modalidade 1', ativo: true },
+        { id: '1', nome: 'Modalidade 1', ativo: true, escolas: [] },
       ];
 
       jest.spyOn(repository, 'find').mockResolvedValue(modalidades);
@@ -58,6 +58,7 @@ describe('ModalidadeService', () => {
         id: '1',
         nome: 'Modalidade 1',
         ativo: true,
+        escolas: [],
       };
 
       jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(modalidade);
@@ -73,6 +74,7 @@ describe('ModalidadeService', () => {
         id: '1',
         nome: 'Updated Modalidade',
         ativo: true,
+        escolas: [],
       };
 
       jest.spyOn(repository, 'update').mockResolvedValue({} as any);
@@ -88,6 +90,7 @@ describe('ModalidadeService', () => {
         id: '1',
         nome: 'Modalidade 1',
         ativo: true,
+        escolas: [],
       };
       const deactivatedModalidade = { ...modalidade, ativo: false };
 

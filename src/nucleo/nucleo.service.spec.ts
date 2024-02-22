@@ -42,7 +42,9 @@ describe('NucleoService', () => {
   });
   describe('findAll', () => {
     it('should return all nucleos', async () => {
-      const nucleos: Nucleo[] = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
+      const nucleos: Nucleo[] = [
+        { id: '1', nome: 'Nucleo 1', ativo: true, escolas: [] },
+      ];
 
       jest.spyOn(repository, 'find').mockResolvedValue(nucleos);
       expect(await service.findAll()).toEqual(nucleos);
@@ -50,7 +52,12 @@ describe('NucleoService', () => {
   });
   describe('findOne', () => {
     it('should return a nucleo by ID', async () => {
-      const nucleo: Nucleo = { id: '1', nome: 'Nucleo 1', ativo: true };
+      const nucleo: Nucleo = {
+        id: '1',
+        nome: 'Nucleo 1',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(nucleo);
       expect(await service.findOne('1')).toEqual(nucleo);
@@ -59,7 +66,12 @@ describe('NucleoService', () => {
   describe('update', () => {
     it('should update a nucleo by ID', async () => {
       const updateNucleoDto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
-      const nucleo: Nucleo = { id: '1', nome: 'Updated Nucleo', ativo: true };
+      const nucleo: Nucleo = {
+        id: '1',
+        nome: 'Updated Nucleo',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(repository, 'update').mockResolvedValue({} as any);
       jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(nucleo);
@@ -68,7 +80,12 @@ describe('NucleoService', () => {
   });
   describe('deactivate', () => {
     it('should deactivate a nucleo by ID', async () => {
-      const nucleo: Nucleo = { id: '1', nome: 'Nucleo 1', ativo: true };
+      const nucleo: Nucleo = {
+        id: '1',
+        nome: 'Nucleo 1',
+        ativo: true,
+        escolas: [],
+      };
       const deactivatedNucleo = { ...nucleo, ativo: false };
 
       jest.spyOn(repository, 'update').mockResolvedValue({} as any);

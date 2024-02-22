@@ -65,7 +65,7 @@ describe('NucleoController', () => {
   describe('create', () => {
     it('should create a new nucleo', async () => {
       const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
-      const result = { id: '1', ...dto, ativo: true };
+      const result = { id: '1', ...dto, ativo: true, escolas: [] };
 
       jest.spyOn(service, 'create').mockResolvedValue(result);
       expect(await controller.create(dto)).toBe(result);
@@ -80,7 +80,7 @@ describe('NucleoController', () => {
   });
   describe('findAll', () => {
     it('should return an array of nucleos', async () => {
-      const result = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
+      const result = [{ id: '1', nome: 'Nucleo 1', ativo: true, escolas: [] }];
 
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await controller.findAll()).toBe(result);
@@ -88,7 +88,7 @@ describe('NucleoController', () => {
   });
   describe('findOne', () => {
     it('should return a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: true };
+      const result = { id: '1', nome: 'Nucleo 1', ativo: true, escolas: [] };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await controller.findOne('1')).toBe(result);
@@ -97,7 +97,12 @@ describe('NucleoController', () => {
   describe('update', () => {
     it('should update a nucleo by ID', async () => {
       const dto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
-      const result = { id: '1', nome: 'Updated Nucleo', ativo: true };
+      const result = {
+        id: '1',
+        nome: 'Updated Nucleo',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(await controller.update('1', dto)).toBe(result);
@@ -111,7 +116,7 @@ describe('NucleoController', () => {
   });
   describe('deactivate', () => {
     it('should deactivate a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: false };
+      const result = { id: '1', nome: 'Nucleo 1', ativo: false, escolas: [] };
 
       jest.spyOn(service, 'deactivate').mockResolvedValue(result);
       expect(await controller.deactivate('1')).toBe(result);

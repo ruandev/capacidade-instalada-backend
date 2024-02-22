@@ -4,10 +4,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Modalidade } from '../../modalidade/entities/modalidade.entity';
 
 @Entity({ name: 'escolas' })
 export class Escola {
@@ -21,7 +24,7 @@ export class Escola {
   diretora: string;
 
   @Column({ nullable: true })
-  vice_diretora: string;
+  vicediretora: string;
 
   @Column()
   coordenadora: string;
@@ -30,9 +33,13 @@ export class Escola {
   secretaria: string;
 
   @ManyToOne(() => Nucleo, (nucleo) => nucleo.id)
-  @JoinColumn({ name: 'nucleo_id' })
+  @JoinColumn()
   nucleo: Nucleo;
 
   @OneToMany(() => Usuario, (usuario) => usuario.escola)
   usuarios: Usuario[];
+
+  @ManyToMany(() => Modalidade, (modalidade) => modalidade.escolas)
+  @JoinTable({ name: 'escola_modalidade' })
+  modalidades: Modalidade[];
 }
