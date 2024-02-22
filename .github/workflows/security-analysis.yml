@@ -1,0 +1,18 @@
+name: Security Analysis
+
+on:
+  pull_request:
+
+jobs:
+  security-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run security analysis
+        run: npx snyk test
