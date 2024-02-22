@@ -8,6 +8,7 @@ import { UpdateNucleoDto } from './dto/update-nucleo.dto';
 
 describe('NucleoService', () => {
   let service: NucleoService;
+
   let repository: Repository<Nucleo>;
 
   beforeEach(async () => {
@@ -24,43 +25,38 @@ describe('NucleoService', () => {
     service = module.get<NucleoService>(NucleoService);
     repository = module.get<Repository<Nucleo>>(getRepositoryToken(Nucleo));
   });
-
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
   describe('create', () => {
     it('should create a new nucleo', async () => {
       const createNucleoDto: CreateNucleoDto = {
         nome: 'Nucleo 1',
       };
       const nucleo = new Nucleo();
+
       nucleo.nome = createNucleoDto.nome;
 
       jest.spyOn(repository, 'save').mockResolvedValue(nucleo);
-
       expect(await service.create(createNucleoDto)).toEqual(nucleo);
     });
   });
-
   describe('findAll', () => {
     it('should return all nucleos', async () => {
       const nucleos: Nucleo[] = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
-      jest.spyOn(repository, 'find').mockResolvedValue(nucleos);
 
+      jest.spyOn(repository, 'find').mockResolvedValue(nucleos);
       expect(await service.findAll()).toEqual(nucleos);
     });
   });
-
   describe('findOne', () => {
     it('should return a nucleo by ID', async () => {
       const nucleo: Nucleo = { id: '1', nome: 'Nucleo 1', ativo: true };
-      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(nucleo);
 
+      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(nucleo);
       expect(await service.findOne('1')).toEqual(nucleo);
     });
   });
-
   describe('update', () => {
     it('should update a nucleo by ID', async () => {
       const updateNucleoDto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
@@ -68,11 +64,9 @@ describe('NucleoService', () => {
 
       jest.spyOn(repository, 'update').mockResolvedValue({} as any);
       jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(nucleo);
-
       expect(await service.update('1', updateNucleoDto)).toEqual(nucleo);
     });
   });
-
   describe('deactivate', () => {
     it('should deactivate a nucleo by ID', async () => {
       const nucleo: Nucleo = { id: '1', nome: 'Nucleo 1', ativo: true };
@@ -82,7 +76,6 @@ describe('NucleoService', () => {
       jest
         .spyOn(repository, 'findOneByOrFail')
         .mockResolvedValue(deactivatedNucleo);
-
       expect(await service.deactivate('1')).toEqual(deactivatedNucleo);
     });
   });

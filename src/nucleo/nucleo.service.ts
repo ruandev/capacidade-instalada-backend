@@ -14,7 +14,9 @@ export class NucleoService {
 
   async create(createNucleoDto: CreateNucleoDto) {
     const nucleo = new Nucleo();
+
     nucleo.nome = createNucleoDto.nome;
+
     return await this.nucleoRepository.save(nucleo);
   }
 
@@ -32,13 +34,16 @@ export class NucleoService {
 
   async update(id: string, updateNucleoDto: UpdateNucleoDto) {
     const nucleo = new Nucleo();
+
     nucleo.nome = updateNucleoDto.nome;
     await this.nucleoRepository.update({ id }, nucleo);
+
     return await this.nucleoRepository.findOneByOrFail({ id });
   }
 
   async deactivate(id: string) {
     await this.nucleoRepository.update({ id }, { ativo: false });
+
     return await this.nucleoRepository.findOneByOrFail({ id });
   }
 }

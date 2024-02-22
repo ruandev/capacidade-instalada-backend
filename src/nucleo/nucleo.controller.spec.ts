@@ -17,7 +17,7 @@ import { UpdateNucleoDto } from './dto/update-nucleo.dto';
 @Injectable()
 class MockAuthService {
   validateUser(user: any) {
-    return { id: '1', username: 'testuser', roles: [Role.Admin] };
+    return { id: '1', username: 'testuser', roles: [Role.ADMIN] };
   }
 }
 
@@ -25,14 +25,18 @@ class MockAuthService {
 class MockRolesGuard {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    request.user = { id: '1', username: 'testuser', roles: [Role.Admin] };
+
+    request.user = { id: '1', username: 'testuser', roles: [Role.ADMIN] };
+
     return true;
   }
 }
 
 describe('NucleoController', () => {
   let controller: NucleoController;
+
   let service: NucleoService;
+
   let testingModule: TestingModule;
 
   beforeEach(async () => {
@@ -54,80 +58,70 @@ describe('NucleoController', () => {
         },
       ],
     }).compile();
-
     controller = testingModule.get<NucleoController>(NucleoController);
     service = testingModule.get<NucleoService>(NucleoService);
   });
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-
   describe('create', () => {
     it('should create a new nucleo', async () => {
       const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
       const result = { id: '1', ...dto, ativo: true };
-      jest.spyOn(service, 'create').mockResolvedValue(result);
 
+      jest.spyOn(service, 'create').mockResolvedValue(result);
       expect(await controller.create(dto)).toBe(result);
     });
-
     it('should throw an error if user does not have Role Admin', async () => {
       const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
       const mockRolesGuard = testingModule.get<MockRolesGuard>(RolesGuard);
-      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
 
+      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
       await expect(controller.create(dto)).rejects.toThrow();
     });
   });
-
   describe('findAll', () => {
     it('should return an array of nucleos', async () => {
       const result = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
-      jest.spyOn(service, 'findAll').mockResolvedValue(result);
 
+      jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await controller.findAll()).toBe(result);
     });
   });
-
   describe('findOne', () => {
     it('should return a nucleo by ID', async () => {
       const result = { id: '1', nome: 'Nucleo 1', ativo: true };
-      jest.spyOn(service, 'findOne').mockResolvedValue(result);
 
+      jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await controller.findOne('1')).toBe(result);
     });
   });
-
   describe('update', () => {
     it('should update a nucleo by ID', async () => {
       const dto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
       const result = { id: '1', nome: 'Updated Nucleo', ativo: true };
-      jest.spyOn(service, 'update').mockResolvedValue(result);
 
+      jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(await controller.update('1', dto)).toBe(result);
     });
-
     it('should throw an error if user does not have Role Admin', async () => {
       const mockRolesGuard = testingModule.get<MockRolesGuard>(RolesGuard);
-      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
 
+      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
       await expect(controller.update('1', { nome: '' })).rejects.toThrow();
     });
   });
-
   describe('deactivate', () => {
     it('should deactivate a nucleo by ID', async () => {
       const result = { id: '1', nome: 'Nucleo 1', ativo: false };
-      jest.spyOn(service, 'deactivate').mockResolvedValue(result);
 
+      jest.spyOn(service, 'deactivate').mockResolvedValue(result);
       expect(await controller.deactivate('1')).toBe(result);
     });
-
     it('should throw an error if user does not have Role Admin', async () => {
       const mockRolesGuard = testingModule.get<MockRolesGuard>(RolesGuard);
-      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
 
+      jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
       await expect(controller.deactivate('1')).rejects.toThrow();
     });
   });

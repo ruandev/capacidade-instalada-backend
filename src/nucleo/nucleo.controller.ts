@@ -31,7 +31,7 @@ export class NucleoController {
   }
 
   @Post()
-  @HasRoles(Role.Admin)
+  @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   create(@Body() createNucleoDto: CreateNucleoDto) {
@@ -39,15 +39,15 @@ export class NucleoController {
   }
 
   @Patch(':id')
-  @HasRoles(Role.Admin)
+  @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateNucleoDto: UpdateNucleoDto) {
     return this.nucleoService.update(id, updateNucleoDto);
   }
 
-  @Put(':id')
-  @HasRoles(Role.Admin)
+  @Put(':id/deactivate')
+  @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   deactivate(@Param('id') id: string) {

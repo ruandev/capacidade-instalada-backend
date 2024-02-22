@@ -1,6 +1,6 @@
 export enum Role {
-  Admin = 'admin',
-  Secretaria = 'secretaria',
+  ADMIN = 'admin',
+  SECRETARIA = 'secretaria',
 }
 
 export function stringToRole(value: string): Role | undefined {

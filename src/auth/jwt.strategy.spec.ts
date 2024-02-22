@@ -11,15 +11,12 @@ describe('JwtStrategy', () => {
 
     strategy = module.get<JwtStrategy>(JwtStrategy);
   });
-
   it('should be defined', () => {
     expect(strategy).toBeDefined();
   });
-
   describe('validate', () => {
     it('should return payload if token is valid', async () => {
       const mockPayload = { sub: '1', username: 'testuser', role: 'user' };
-
       const result = await strategy.validate(mockPayload);
 
       expect(result).toEqual({

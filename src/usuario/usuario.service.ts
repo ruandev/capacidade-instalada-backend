@@ -4,6 +4,8 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { stringToRole } from '../auth/role.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuarioService {
@@ -12,8 +14,15 @@ export class UsuarioService {
     private usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto) {
-    return 'This action adds a new usuario';
+  async create({ nome, cpf, role, password }: CreateUsuarioDto) {
+    const usuario: Usuario = new Usuario();
+
+    usuario.nome = nome;
+    usuario.cpf = cpf;
+    usuario.role = stringToRole(role);
+    usuario.password = await bcrypt.hash(password, 10);
+
+    return await this.usuarioRepository.save(usuario);
   }
 
   async findAll() {
@@ -24,15 +33,28 @@ export class UsuarioService {
     return await this.usuarioRepository.findOneByOrFail({ id });
   }
 
-  async update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
-  }
+  async update(id: string, { nome, cpf, password }: UpdateUsuarioDto) {
+    const usuario = new Usuario();
 
-  async remove(id: string) {
-    return `This action removes a #${id} usuario`;
+    usuario.nome = nome;
+    usuario.cpf = cpf;
+
+    if (password) {
+      usuario.password = await bcrypt.hash(password, 10);
+    }
+
+    await this.usuarioRepository.update(id, usuario);
+
+    return await this.usuarioRepository.findOneByOrFail({ id });
   }
 
   async findByCPF(cpf: string) {
     return await this.usuarioRepository.findOneByOrFail({ cpf });
+  }
+
+  async deactivate(id: string) {
+    await this.usuarioRepository.update({ id }, { ativo: false });
+
+    return await this.usuarioRepository.findOneByOrFail({ id });
   }
 }
