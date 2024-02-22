@@ -4,7 +4,6 @@ import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Role } from '../auth/role.enum';
-import { ExecutionContext, INestApplication } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 class MockUsuarioService {
@@ -31,6 +30,7 @@ class MockUsuarioService {
 
 describe('UsuarioController', () => {
   let controller: UsuarioController;
+
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -44,22 +44,19 @@ describe('UsuarioController', () => {
       ],
     })
       .overrideGuard(AuthGuard('jwt'))
-      .useValue({ canActivate: (context: ExecutionContext) => true }) // Sobrescrevendo JwtAuthGuard
+      .useValue({ canActivate: () => true })
       .compile();
 
     controller = module.get<UsuarioController>(UsuarioController);
     app = module.createNestApplication();
     await app.init();
   });
-
   afterEach(async () => {
     await app.close();
   });
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-
   it('should create a new usuario', async () => {
     const createUsuarioDto: CreateUsuarioDto = {
       nome: 'Teste',
@@ -68,11 +65,12 @@ describe('UsuarioController', () => {
       password: '123456',
     };
     const result = await controller.create(createUsuarioDto);
+
     expect(result).toEqual({ id: '1', ...createUsuarioDto });
   });
-
   it('should find all usuarios', async () => {
     const result = await controller.findAll();
+
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
       id: '1',
@@ -81,9 +79,9 @@ describe('UsuarioController', () => {
       role: Role.ADMIN,
     });
   });
-
   it('should find one usuario', async () => {
     const result = await controller.findOne('1');
+
     expect(result).toEqual({
       id: '1',
       nome: 'Teste',
@@ -91,18 +89,18 @@ describe('UsuarioController', () => {
       role: Role.ADMIN,
     });
   });
-
   it('should update a usuario', async () => {
     const updateUsuarioDto: UpdateUsuarioDto = {
       nome: 'Novo Nome',
       cpf: '98765432109',
     };
     const result = await controller.update('1', updateUsuarioDto);
+
     expect(result).toEqual({ id: '1', ...updateUsuarioDto });
   });
-
   it('should deactivate a usuario', async () => {
     const result = await controller.deactivate('1');
+
     expect(result).toEqual({ id: '1', ativo: false });
   });
 });

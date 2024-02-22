@@ -10,6 +10,7 @@ import { Role } from '../auth/role.enum';
 
 describe('UsuarioService', () => {
   let service: UsuarioService;
+
   let repository: Repository<Usuario>;
 
   beforeEach(async () => {
@@ -28,56 +29,50 @@ describe('UsuarioService', () => {
     service = module.get<UsuarioService>(UsuarioService);
     repository = module.get<Repository<Usuario>>(getRepositoryToken(Usuario));
   });
-
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
   describe('create', () => {
     it('should create a new usuario', async () => {
       const mockHash = jest
         .spyOn(bcrypt, 'hashSync')
         .mockReturnValue('hashedPassword');
-
       const createDto: CreateUsuarioDto = {
         nome: 'Teste',
         cpf: '12345678901',
         role: Role.SECRETARIA,
         password: '123456',
       };
-
       const usuario = new Usuario();
 
       usuario.nome = createDto.nome;
       usuario.cpf = createDto.cpf;
       usuario.role = createDto.role;
-
       jest.spyOn(repository, 'save').mockResolvedValue(usuario);
+
       const result = await service.create(createDto);
+
       expect(result).toEqual(usuario);
       expect(repository.save).toHaveBeenCalled();
       expect(mockHash).toHaveBeenCalledWith(createDto.password, 10);
     });
   });
-
   describe('findAll', () => {
     it('should return an array of usuarios', async () => {
       const usuarios = [new Usuario(), new Usuario()];
-      jest.spyOn(repository, 'find').mockResolvedValue(usuarios);
 
+      jest.spyOn(repository, 'find').mockResolvedValue(usuarios);
       expect(await service.findAll()).toEqual(usuarios);
     });
   });
-
   describe('findOne', () => {
     it('should return a usuario by id', async () => {
       const usuario = new Usuario();
-      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(usuario);
 
+      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(usuario);
       expect(await service.findOne('1')).toEqual(usuario);
     });
   });
-
   describe('update', () => {
     it('should update a usuario without password', async () => {
       const updateDto: UpdateUsuarioDto = {
@@ -85,6 +80,7 @@ describe('UsuarioService', () => {
         cpf: '98765432109',
       };
       const usuario = new Usuario();
+
       usuario.nome = updateDto.nome;
       usuario.cpf = updateDto.cpf;
       jest.spyOn(repository, 'update').mockResolvedValue(undefined);
@@ -97,7 +93,6 @@ describe('UsuarioService', () => {
       expect(updatedUsuario.cpf).toEqual(updateDto.cpf);
       expect(jest.spyOn(bcrypt, 'hash')).not.toHaveBeenCalled();
     });
-
     it('should update a usuario with password', async () => {
       const updateDto: UpdateUsuarioDto = {
         nome: 'Novo Nome',
@@ -105,6 +100,7 @@ describe('UsuarioService', () => {
         password: '654321',
       };
       const usuario = new Usuario();
+
       usuario.nome = updateDto.nome;
       usuario.cpf = updateDto.cpf;
       usuario.password = updateDto.password;
@@ -122,19 +118,18 @@ describe('UsuarioService', () => {
       );
     });
   });
-
   describe('findByCPF', () => {
     it('should return a usuario by CPF', async () => {
       const usuario = new Usuario();
-      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(usuario);
 
+      jest.spyOn(repository, 'findOneByOrFail').mockResolvedValue(usuario);
       expect(await service.findByCPF('12345678901')).toEqual(usuario);
     });
   });
-
   describe('deactivate', () => {
     it('should deactivate a usuario', async () => {
       const usuario = new Usuario();
+
       usuario.id = '1';
       usuario.ativo = false;
       jest.spyOn(repository, 'update').mockResolvedValue(undefined);

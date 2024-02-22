@@ -36,7 +36,6 @@ describe('NucleoService', () => {
       const nucleo = new Nucleo();
 
       nucleo.nome = createNucleoDto.nome;
-
       jest.spyOn(repository, 'save').mockResolvedValue(nucleo);
       expect(await service.create(createNucleoDto)).toEqual(nucleo);
     });
