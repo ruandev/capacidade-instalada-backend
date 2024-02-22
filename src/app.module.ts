@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { NucleoController } from './nucleo/nucleo.controller';
-import { NucleoService } from './nucleo/nucleo.service';
 import { NucleoModule } from './nucleo/nucleo.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { EscolaModule } from './escola/escola.module';
+import { ModalidadeModule } from './modalidade/modalidade.module';
 
 @Module({
   imports: [
@@ -20,8 +17,10 @@ import { EscolaModule } from './escola/escola.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [],
+      entities: ['dist/src/**/*/*.entity.ts'],
+      autoLoadEntities: true,
       synchronize: true,
+      verboseRetryLog: true,
       logging: true,
       ssl: {
         rejectUnauthorized: false,
@@ -31,8 +30,9 @@ import { EscolaModule } from './escola/escola.module';
     AuthModule,
     NucleoModule,
     EscolaModule,
+    ModalidadeModule,
   ],
-  controllers: [AppController, NucleoController],
-  providers: [AppService, NucleoService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

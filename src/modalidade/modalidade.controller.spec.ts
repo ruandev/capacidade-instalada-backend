@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
-import { NucleoController } from './nucleo.controller';
-import { NucleoService } from './nucleo.service';
-import { CreateNucleoDto } from './dto/create-nucleo.dto';
+import { ModalidadeController } from './modalidade.controller';
+import { ModalidadeService } from './modalidade.service';
+import { CreateModalidadeDto } from './dto/create-modalidade.dto';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Role } from '../auth/role.enum';
 import { AuthService } from '../auth/auth.service';
 import { RolesGuard } from '../auth/roles.guard';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Nucleo } from './entities/nucleo.entity';
+import { Modalidade } from './entities/modalidade.entity';
 import { Repository } from 'typeorm';
-import { UpdateNucleoDto } from './dto/update-nucleo.dto';
+import { UpdateModalidadeDto } from './dto/update-modalidade.dto';
 
 @Injectable()
 class MockAuthService {
@@ -30,18 +30,18 @@ class MockRolesGuard {
   }
 }
 
-describe('NucleoController', () => {
-  let controller: NucleoController;
+describe('ModalidadeController', () => {
+  let controller: ModalidadeController;
 
-  let service: NucleoService;
+  let service: ModalidadeService;
 
   let testingModule: TestingModule;
 
   beforeEach(async () => {
     testingModule = await Test.createTestingModule({
-      controllers: [NucleoController],
+      controllers: [ModalidadeController],
       providers: [
-        NucleoService,
+        ModalidadeService,
         {
           provide: AuthService,
           useClass: MockAuthService,
@@ -51,27 +51,27 @@ describe('NucleoController', () => {
           useClass: MockRolesGuard,
         },
         {
-          provide: getRepositoryToken(Nucleo),
+          provide: getRepositoryToken(Modalidade),
           useClass: Repository,
         },
       ],
     }).compile();
-    controller = testingModule.get<NucleoController>(NucleoController);
-    service = testingModule.get<NucleoService>(NucleoService);
+    controller = testingModule.get<ModalidadeController>(ModalidadeController);
+    service = testingModule.get<ModalidadeService>(ModalidadeService);
   });
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
   describe('create', () => {
-    it('should create a new nucleo', async () => {
-      const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
+    it('should create a new modalidade', async () => {
+      const dto: CreateModalidadeDto = { nome: 'Modalidade 1' };
       const result = { id: '1', ...dto, ativo: true };
 
       jest.spyOn(service, 'create').mockResolvedValue(result);
       expect(await controller.create(dto)).toBe(result);
     });
     it('should throw an error if user does not have Role Admin', async () => {
-      const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
+      const dto: CreateModalidadeDto = { nome: 'Modalidade 1' };
       const mockRolesGuard = testingModule.get<MockRolesGuard>(RolesGuard);
 
       jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
@@ -79,25 +79,25 @@ describe('NucleoController', () => {
     });
   });
   describe('findAll', () => {
-    it('should return an array of nucleos', async () => {
-      const result = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
+    it('should return an array of modalidades', async () => {
+      const result = [{ id: '1', nome: 'Modalidade 1', ativo: true }];
 
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await controller.findAll()).toBe(result);
     });
   });
   describe('findOne', () => {
-    it('should return a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: true };
+    it('should return a modalidade by ID', async () => {
+      const result = { id: '1', nome: 'Modalidade 1', ativo: true };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await controller.findOne('1')).toBe(result);
     });
   });
   describe('update', () => {
-    it('should update a nucleo by ID', async () => {
-      const dto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
-      const result = { id: '1', nome: 'Updated Nucleo', ativo: true };
+    it('should update a modalidade by ID', async () => {
+      const dto: UpdateModalidadeDto = { nome: 'Updated Modalidade' };
+      const result = { id: '1', nome: 'Updated Modalidade', ativo: true };
 
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(await controller.update('1', dto)).toBe(result);
@@ -110,8 +110,8 @@ describe('NucleoController', () => {
     });
   });
   describe('deactivate', () => {
-    it('should deactivate a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: false };
+    it('should deactivate a modalidade by ID', async () => {
+      const result = { id: '1', nome: 'Modalidade 1', ativo: false };
 
       jest.spyOn(service, 'deactivate').mockResolvedValue(result);
       expect(await controller.deactivate('1')).toBe(result);

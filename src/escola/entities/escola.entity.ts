@@ -1,6 +1,15 @@
+import { Usuario } from '../../usuario/entities/usuario.entity';
 import { Nucleo } from '../../nucleo/entities/nucleo.entity';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity({ name: 'escolas' })
 export class Escola {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,4 +32,7 @@ export class Escola {
   @ManyToOne(() => Nucleo, (nucleo) => nucleo.id)
   @JoinColumn({ name: 'nucleo_id' })
   nucleo: Nucleo;
+
+  @OneToMany(() => Usuario, (usuario) => usuario.escola)
+  usuarios: Usuario[];
 }
