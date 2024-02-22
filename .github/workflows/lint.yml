@@ -1,4 +1,4 @@
-name: Code Review
+name: Lint Check
 
 on:
   pull_request:

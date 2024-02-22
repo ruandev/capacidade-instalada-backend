@@ -1,10 +1,12 @@
-name: Run Tests and Coverage Check on Pull Request
+name: Test and Coverage Check
+
 on:
   pull_request:
 
 jobs:
   test-and-coverage:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -13,15 +15,7 @@ jobs:
         run: yarn install
 
       - name: Run tests with coverage
-        run: yarn run test:cov
-
-      - name: Check coverage percentage
         run: |
-          threshold=70
-          coverage=$(cat coverage/lcov.info | grep -E "statements|branches|functions|lines" | awk '{sum += $3} END {print sum / 4}')
-          if (( $(echo "$coverage >= $threshold" | bc -l) )); then
-            echo "Coverage is $coverage%. Threshold met. ✔️"
-          else
-            echo "Coverage is $coverage%. Threshold not met. ❌"
-            exit 1
-          fi
+          yarn test --coverage
+          coverage_threshold=$(echo '{"global": {"branches": 65, "functions": 65, "lines": 70, "statements": 70}}' | base64)
+          yarn test --coverage --coverageThreshold=$coverage_threshold

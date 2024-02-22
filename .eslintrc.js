@@ -45,5 +45,5 @@ module.exports = {
       }
     ],
     '@stylistic/nonblock-statement-body-position': ['error']
-  },
+  }
 };

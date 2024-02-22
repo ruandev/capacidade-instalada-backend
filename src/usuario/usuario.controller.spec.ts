@@ -5,6 +5,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Role } from '../auth/role.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { INestApplication } from '@nestjs/common';
 
 class MockUsuarioService {
   create(createUsuarioDto: CreateUsuarioDto) {
