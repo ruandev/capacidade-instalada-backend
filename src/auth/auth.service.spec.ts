@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsuarioService } from '../usuario/usuario.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt-updated';
 import { UnauthorizedException } from '@nestjs/common';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Role } from './role.enum';
@@ -53,7 +53,7 @@ describe('AuthService', () => {
       const mockJwtToken = 'mock_jwt_token';
 
       jest.spyOn(usuarioService, 'findOne').mockResolvedValue(mockUser);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+      jest.spyOn(bcrypt, 'compareSync').mockReturnValue(true);
       jest.spyOn(jwtService, 'sign').mockReturnValue(mockJwtToken);
 
       const result = await service.validateUser('12345678900', 'password');
@@ -82,7 +82,7 @@ describe('AuthService', () => {
       };
 
       jest.spyOn(usuarioService, 'findOne').mockResolvedValue(mockUser);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+      jest.spyOn(bcrypt, 'compareSync').mockReturnValue(false);
       await expect(
         service.validateUser('12345678900', 'invalid_password'),
       ).rejects.toThrow(UnauthorizedException);

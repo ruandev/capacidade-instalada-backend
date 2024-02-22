@@ -5,7 +5,7 @@ import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { stringToRole } from '../auth/role.enum';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt-updated';
 
 @Injectable()
 export class UsuarioService {
@@ -20,7 +20,7 @@ export class UsuarioService {
     usuario.nome = nome;
     usuario.cpf = cpf;
     usuario.role = stringToRole(role);
-    usuario.password = await bcrypt.hash(password, 10);
+    usuario.password = bcrypt.hashSync(password, 10);
 
     return await this.usuarioRepository.save(usuario);
   }

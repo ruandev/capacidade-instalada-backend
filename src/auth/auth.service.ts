@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt-updated';
 import { Usuario } from '../usuario/entities/usuario.entity';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class AuthService {
         throw new UnauthorizedException();
       }
 
-      const passValidation = await bcrypt.compare(pass, user.password);
+      const passValidation = bcrypt.compareSync(pass, user.password);
 
       if (!passValidation) {
         throw new UnauthorizedException();

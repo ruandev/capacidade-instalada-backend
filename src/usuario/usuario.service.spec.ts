@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt-updated';
 import { Role } from '../auth/role.enum';
 
 describe('UsuarioService', () => {
@@ -36,8 +36,8 @@ describe('UsuarioService', () => {
   describe('create', () => {
     it('should create a new usuario', async () => {
       const mockHash = jest
-        .spyOn(bcrypt, 'hash')
-        .mockResolvedValue('hashedPassword');
+        .spyOn(bcrypt, 'hashSync')
+        .mockReturnValue('hashedPassword');
 
       const createDto: CreateUsuarioDto = {
         nome: 'Teste',
