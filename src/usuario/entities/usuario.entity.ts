@@ -34,4 +34,12 @@ export class Usuario {
   @ManyToOne(() => Escola, (escola) => escola.usuarios, { nullable: true })
   @JoinColumn()
   escola?: Escola;
+
+  static comId(id: string) {
+    const usuario = new Usuario();
+
+    usuario.id = id;
+
+    return usuario;
+  }
 }

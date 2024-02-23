@@ -8,6 +8,7 @@ import { EscolaModule } from './escola/escola.module';
 import { ModalidadeModule } from './modalidade/modalidade.module';
 import { SerieModule } from './serie/serie.module';
 import { SalaModule } from './sala/sala.module';
+import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SalaModule } from './sala/sala.module';
     ModalidadeModule,
     SerieModule,
     SalaModule,
+    HistoricoAlteracaoModule,
   ],
   controllers: [],
   providers: [],

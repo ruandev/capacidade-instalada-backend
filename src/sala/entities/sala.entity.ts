@@ -72,4 +72,12 @@ export class Sala {
 
   @ManyToOne(() => Serie)
   serie: Serie;
+
+  static comId(id: string) {
+    const sala = new Sala();
+
+    sala.id = id;
+
+    return sala;
+  }
 }
