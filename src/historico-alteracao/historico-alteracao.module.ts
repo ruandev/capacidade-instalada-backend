@@ -7,5 +7,6 @@ import { HistoricoAlteracao } from './entities/historico-alteracao.entity';
   imports: [TypeOrmModule.forFeature([HistoricoAlteracao])],
   controllers: [],
   providers: [HistoricoAlteracaoService],
+  exports: [HistoricoAlteracaoService],
 })
 export class HistoricoAlteracaoModule {}

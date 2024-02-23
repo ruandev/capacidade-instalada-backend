@@ -46,4 +46,12 @@ export class Escola {
 
   @OneToMany(() => Sala, (sala) => sala.escola)
   salas: Sala[];
+
+  static comId(id: string) {
+    const escola = new Escola();
+
+    escola.id = id;
+
+    return escola;
+  }
 }

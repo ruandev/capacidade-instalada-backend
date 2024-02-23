@@ -18,6 +18,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.enum';
+import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
 
 const mockCreateSalaDto: CreateSalaDto = {
   numero: 1,
@@ -36,14 +37,6 @@ const mockCreateSalaDto: CreateSalaDto = {
   escola_id: '123',
   serie_id: '123',
 };
-const escola = new Escola();
-
-escola.id = '123';
-
-const serie = new Serie();
-
-serie.id = '123';
-
 const mockSala: Sala = {
   id: '1',
   numero: 1,
@@ -59,8 +52,8 @@ const mockSala: Sala = {
   intraRede: 1,
   projecao: 15,
   professorPrincipal: 'Maria',
-  escola: escola,
-  serie: serie,
+  escola: Escola.comId('123'),
+  serie: Serie.comId('123'),
   ativo: true,
   updatedAt: new Date(),
 };
@@ -106,6 +99,10 @@ describe('SalaController', () => {
         {
           provide: getRepositoryToken(Sala),
           useClass: Repository,
+        },
+        {
+          provide: HistoricoAlteracaoService,
+          useValue: {},
         },
       ],
     }).compile();

@@ -8,6 +8,7 @@ import { Turno } from './entities/turno.enum';
 import { Escola } from '../escola/entities/escola.entity';
 import { Serie } from '../serie/entities/serie.entity';
 import { UpdateSalaDto } from './dto/update-sala.dto';
+import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
 
 const createSalaDto: CreateSalaDto = {
   numero: 1,
@@ -26,14 +27,6 @@ const createSalaDto: CreateSalaDto = {
   escola_id: '123',
   serie_id: '123',
 };
-const escola = new Escola();
-
-escola.id = '123';
-
-const serie = new Serie();
-
-serie.id = '123';
-
 const expectedSala: Sala = {
   id: '1',
   numero: 1,
@@ -49,8 +42,8 @@ const expectedSala: Sala = {
   intraRede: 1,
   projecao: 15,
   professorPrincipal: 'Maria',
-  escola: escola,
-  serie: serie,
+  escola: Escola.comId('123'),
+  serie: Serie.comId('123'),
   ativo: true,
   updatedAt: new Date(),
 };
@@ -60,13 +53,23 @@ describe('SalaService', () => {
 
   let salaRepository: Repository<Sala>;
 
+  let historicoAlteracaoService: Partial<HistoricoAlteracaoService>;
+
   beforeEach(async () => {
+    historicoAlteracaoService = {
+      create: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SalaService,
         {
           provide: getRepositoryToken(Sala),
           useClass: Repository,
+        },
+        {
+          provide: HistoricoAlteracaoService,
+          useValue: historicoAlteracaoService,
         },
       ],
     }).compile();
@@ -111,18 +114,45 @@ describe('SalaService', () => {
     });
   });
   describe('update', () => {
-    it('should update a sala', async () => {
-      const salaId = '1';
-      const updateSalaDto: UpdateSalaDto = { evadidos: 2 };
+    it('should update sala and create historico de alteracao', async () => {
+      const id = '1';
+      const userId = 'user1';
+      const updateSalaDto: UpdateSalaDto = {
+        capacidade: 99,
+      };
 
+      jest
+        .spyOn(salaRepository, 'findOneByOrFail')
+        .mockResolvedValueOnce(expectedSala)
+        .mockResolvedValue({ ...expectedSala, capacidade: 99 });
       jest.spyOn(salaRepository, 'update').mockResolvedValue(undefined);
+      await service.update(id, updateSalaDto, userId);
+      expect(salaRepository.findOneByOrFail).toHaveBeenCalledWith({ id });
+      expect(salaRepository.update).toHaveBeenCalledWith(id, expect.any(Sala));
+      expect(historicoAlteracaoService.create).toHaveBeenCalledTimes(1);
+      expect(historicoAlteracaoService.create).toHaveBeenCalledWith({
+        campo: 'capacidade',
+        valorAntigo: 25,
+        valorNovo: 99,
+        usuario_id: userId,
+        sala_id: id,
+      });
+    });
+    it('should not create historico de alteracao when sala is not updated', async () => {
+      const id = '1';
+      const userId = 'user1';
+      const updateSalaDto: UpdateSalaDto = {
+        capacidade: expectedSala.capacidade,
+      };
+
       jest
         .spyOn(salaRepository, 'findOneByOrFail')
         .mockResolvedValue(expectedSala);
-
-      const result = await service.update(salaId, updateSalaDto);
-
-      expect(result).toEqual(expectedSala);
+      jest.spyOn(salaRepository, 'update').mockResolvedValue(undefined);
+      await service.update(id, updateSalaDto, userId);
+      expect(salaRepository.findOneByOrFail).toHaveBeenCalledWith({ id });
+      expect(salaRepository.update).toHaveBeenCalledWith(id, expect.any(Sala));
+      expect(historicoAlteracaoService.create).not.toHaveBeenCalled();
     });
   });
   describe('deactivate', () => {

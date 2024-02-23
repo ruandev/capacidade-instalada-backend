@@ -7,12 +7,15 @@ import { Repository } from 'typeorm';
 import { stringToTurno } from './entities/turno.enum';
 import { Escola } from '../escola/entities/escola.entity';
 import { Serie } from '../serie/entities/serie.entity';
+import { CreateHistoricoAlteracaoDto } from '../historico-alteracao/dto/create-historico-alteracao.dto';
+import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
 
 @Injectable()
 export class SalaService {
   constructor(
     @InjectRepository(Sala)
     private salaRepository: Repository<Sala>,
+    private readonly historicoAlteracaoService: HistoricoAlteracaoService,
   ) {}
 
   async create(createSalaDto: CreateSalaDto) {
@@ -50,10 +53,11 @@ export class SalaService {
     return await this.salaRepository.findOneByOrFail({ id });
   }
 
-  async update(id: string, updateSalaDto: UpdateSalaDto) {
+  async update(id: string, updateSalaDto: UpdateSalaDto, userId: string) {
     const sala = new Sala();
     const escola = new Escola();
     const serie = new Serie();
+    const atualSala = await this.salaRepository.findOneByOrFail({ id });
 
     escola.id = updateSalaDto.escola_id;
     serie.id = updateSalaDto.serie_id;
@@ -75,7 +79,25 @@ export class SalaService {
     sala.professorSecundario = updateSalaDto.professorSecundario;
     await this.salaRepository.update(id, sala);
 
-    return await this.salaRepository.findOneByOrFail({ id });
+    const salaAtualizada = await this.salaRepository.findOneByOrFail({ id });
+    const alteracoes: CreateHistoricoAlteracaoDto[] = [];
+
+    Object.keys(atualSala).forEach((campo) => {
+      if (atualSala[campo] !== salaAtualizada[campo]) {
+        alteracoes.push({
+          campo: campo,
+          valorAntigo: atualSala[campo],
+          valorNovo: salaAtualizada[campo],
+          usuario_id: userId,
+          sala_id: id,
+        });
+      }
+    });
+    alteracoes.forEach(async (alteracao) => {
+      await this.historicoAlteracaoService.create(alteracao);
+    });
+
+    return salaAtualizada;
   }
 
   async deactivate(id: string) {

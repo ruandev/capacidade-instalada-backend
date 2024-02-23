@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { SalaService } from './sala.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
@@ -42,8 +43,12 @@ export class SalaController {
   @HasRoles(Role.ADMIN, Role.SECRETARIA)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateSalaDto: UpdateSalaDto) {
-    return this.salaService.update(id, updateSalaDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateSalaDto: UpdateSalaDto,
+    @Request() req: any,
+  ) {
+    return this.salaService.update(id, updateSalaDto, req.user.id);
   }
 
   @Put(':id/deactivate')

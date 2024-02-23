@@ -10,4 +10,12 @@ export class Serie {
 
   @Column({ default: true })
   ativo: boolean;
+
+  static comId(id: string) {
+    const serie = new Serie();
+
+    serie.id = id;
+
+    return serie;
+  }
 }
