@@ -11,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Modalidade } from '../../modalidade/entities/modalidade.entity';
+import { Sala } from '../../sala/entities/sala.entity';
 
 @Entity({ name: 'escolas' })
 export class Escola {
@@ -42,4 +43,7 @@ export class Escola {
   @ManyToMany(() => Modalidade, (modalidade) => modalidade.escolas)
   @JoinTable({ name: 'escola_modalidade' })
   modalidades: Modalidade[];
+
+  @OneToMany(() => Sala, (sala) => sala.escola)
+  salas: Sala[];
 }

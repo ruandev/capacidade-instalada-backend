@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ name: 'usuarios' })
+@Entity({ name: 'usuarios', orderBy: { nome: 'ASC' } })
 export class Usuario {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { EscolaModule } from './escola/escola.module';
 import { ModalidadeModule } from './modalidade/modalidade.module';
 import { SerieModule } from './serie/serie.module';
+import { SalaModule } from './sala/sala.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SerieModule } from './serie/serie.module';
     EscolaModule,
     ModalidadeModule,
     SerieModule,
+    SalaModule,
   ],
   controllers: [],
   providers: [],
