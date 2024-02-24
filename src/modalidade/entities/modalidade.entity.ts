@@ -14,4 +14,12 @@ export class Modalidade {
 
   @ManyToMany(() => Escola, (escola) => escola.modalidades)
   escolas: Escola[];
+
+  static comId(id: string) {
+    const modalidade = new Modalidade();
+
+    modalidade.id = id;
+
+    return modalidade;
+  }
 }

@@ -15,19 +15,37 @@ import { HasRoles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { EscolaService } from '../escola/escola.service';
 
-@Controller('nucleo')
+@Controller('nucleos')
 export class NucleoController {
-  constructor(private readonly nucleoService: NucleoService) {}
+  constructor(
+    private readonly nucleoService: NucleoService,
+    private readonly escolaService: EscolaService,
+  ) {}
 
   @Get()
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.nucleoService.findAll();
   }
 
   @Get(':id')
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.nucleoService.findOne(id);
+  }
+
+  @Get(':id/escolas')
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  findEscolasByNucleo(@Param('id') id: string) {
+    return this.escolaService.findEscolasByNucleo(id);
   }
 
   @Post()

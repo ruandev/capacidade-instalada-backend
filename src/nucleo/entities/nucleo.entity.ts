@@ -14,4 +14,12 @@ export class Nucleo {
 
   @OneToMany(() => Escola, (escola) => escola.nucleo)
   escolas: Escola[];
+
+  static comId(id: string) {
+    const nucleo = new Nucleo();
+
+    nucleo.id = id;
+
+    return nucleo;
+  }
 }

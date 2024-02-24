@@ -33,6 +33,9 @@ export class Escola {
   @Column()
   secretaria: string;
 
+  @Column({ default: true })
+  ativo: boolean;
+
   @ManyToOne(() => Nucleo, (nucleo) => nucleo.id)
   @JoinColumn()
   nucleo: Nucleo;

@@ -11,6 +11,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Nucleo } from './entities/nucleo.entity';
 import { Repository } from 'typeorm';
 import { UpdateNucleoDto } from './dto/update-nucleo.dto';
+import { EscolaService } from '../escola/escola.service';
+import { Escola } from '../escola/entities/escola.entity';
 
 @Injectable()
 class MockAuthService {
@@ -35,6 +37,8 @@ describe('NucleoController', () => {
 
   let service: NucleoService;
 
+  let escolaService: EscolaService;
+
   let testingModule: TestingModule;
 
   beforeEach(async () => {
@@ -42,6 +46,7 @@ describe('NucleoController', () => {
       controllers: [NucleoController],
       providers: [
         NucleoService,
+        EscolaService,
         {
           provide: AuthService,
           useClass: MockAuthService,
@@ -54,10 +59,15 @@ describe('NucleoController', () => {
           provide: getRepositoryToken(Nucleo),
           useClass: Repository,
         },
+        {
+          provide: getRepositoryToken(Escola),
+          useClass: Repository,
+        },
       ],
     }).compile();
     controller = testingModule.get<NucleoController>(NucleoController);
     service = testingModule.get<NucleoService>(NucleoService);
+    escolaService = testingModule.get<EscolaService>(EscolaService);
   });
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -126,6 +136,21 @@ describe('NucleoController', () => {
 
       jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
       await expect(controller.deactivate('1')).rejects.toThrow();
+    });
+  });
+  describe('findEscolasByNucleo', () => {
+    it('should call findEscolasByNucleo from EscolaService and return result', async () => {
+      const mockId = 'mock-id';
+      const mockResult = [new Escola(), new Escola()];
+
+      jest
+        .spyOn(escolaService, 'findEscolasByNucleo')
+        .mockResolvedValueOnce(mockResult);
+
+      const result = await controller.findEscolasByNucleo(mockId);
+
+      expect(result).toBe(mockResult);
+      expect(escolaService.findEscolasByNucleo).toHaveBeenCalledWith(mockId);
     });
   });
 });
