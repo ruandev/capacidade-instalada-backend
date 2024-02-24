@@ -8,14 +8,15 @@ import { stringToTurno } from './entities/turno.enum';
 import { Escola } from '../escola/entities/escola.entity';
 import { Serie } from '../serie/entities/serie.entity';
 import { CreateHistoricoAlteracaoDto } from '../historico-alteracao/dto/create-historico-alteracao.dto';
-import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
+import { KafkaProducerService } from '../kafka/producer.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class SalaService {
   constructor(
     @InjectRepository(Sala)
     private salaRepository: Repository<Sala>,
-    private readonly historicoAlteracaoService: HistoricoAlteracaoService,
+    private readonly kafkaProducerService: KafkaProducerService,
   ) {}
 
   async create(createSalaDto: CreateSalaDto) {
@@ -90,11 +91,14 @@ export class SalaService {
           valorNovo: salaAtualizada[campo],
           usuario_id: userId,
           sala_id: id,
+          flow_id: randomUUID(),
         });
       }
     });
     alteracoes.forEach(async (alteracao) => {
-      await this.historicoAlteracaoService.create(alteracao);
+      await this.kafkaProducerService.sendMessageToHistoricoAlteracao(
+        alteracao,
+      );
     });
 
     return salaAtualizada;

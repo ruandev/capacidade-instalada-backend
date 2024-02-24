@@ -9,6 +9,7 @@ import { ModalidadeModule } from './modalidade/modalidade.module';
 import { SerieModule } from './serie/serie.module';
 import { SalaModule } from './sala/sala.module';
 import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
+import { KafkaModule } from './kafka/kafka.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { HistoricoAlteracaoModule } from './historico-alteracao/historico-altera
     SerieModule,
     SalaModule,
     HistoricoAlteracaoModule,
+    KafkaModule,
   ],
   controllers: [],
   providers: [],

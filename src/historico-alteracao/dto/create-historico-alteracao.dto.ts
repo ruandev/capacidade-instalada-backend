@@ -4,4 +4,5 @@ export class CreateHistoricoAlteracaoDto {
   valorNovo: string;
   usuario_id: string;
   sala_id: string;
+  flow_id: string;
 }

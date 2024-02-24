@@ -3,12 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SalaController } from './sala.controller';
 import { SalaService } from './sala.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
-import {
-  ExecutionContext,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Turno } from './entities/turno.enum';
 import { Sala } from './entities/sala.entity';
 import { Serie } from '../serie/entities/serie.entity';
@@ -18,7 +13,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.enum';
-import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
+import { KafkaProducerService } from '../kafka/producer.service';
 
 const mockCreateSalaDto: CreateSalaDto = {
   numero: 1,
@@ -101,7 +96,7 @@ describe('SalaController', () => {
           useClass: Repository,
         },
         {
-          provide: HistoricoAlteracaoService,
+          provide: KafkaProducerService,
           useValue: {},
         },
       ],

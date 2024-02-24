@@ -23,6 +23,9 @@ export class HistoricoAlteracao {
   @Column()
   valorNovo: string;
 
+  @Column({ type: 'uuid', unique: true })
+  flowId: string;
+
   @ManyToOne(() => Usuario)
   @JoinColumn()
   usuario: Usuario;

@@ -19,6 +19,7 @@ export class HistoricoAlteracaoService {
     campo,
     valorAntigo,
     valorNovo,
+    flow_id,
   }: CreateHistoricoAlteracaoDto) {
     const historicoAlteracao = new HistoricoAlteracao();
 
@@ -27,8 +28,17 @@ export class HistoricoAlteracaoService {
     historicoAlteracao.valorNovo = valorNovo;
     historicoAlteracao.usuario = Usuario.comId(usuario_id);
     historicoAlteracao.sala = Sala.comId(sala_id);
+    historicoAlteracao.flowId = flow_id;
 
-    return await this.historicoAlteracaoRepository.save(historicoAlteracao);
+    const result = await this.historicoAlteracaoRepository.upsert(
+      historicoAlteracao,
+      {
+        conflictPaths: ['flowId'],
+        skipUpdateIfNoValuesChanged: true,
+      },
+    );
+
+    return result.generatedMaps[0];
   }
 
   async findAll() {

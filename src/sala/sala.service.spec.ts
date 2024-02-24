@@ -8,7 +8,7 @@ import { Turno } from './entities/turno.enum';
 import { Escola } from '../escola/entities/escola.entity';
 import { Serie } from '../serie/entities/serie.entity';
 import { UpdateSalaDto } from './dto/update-sala.dto';
-import { HistoricoAlteracaoService } from '../historico-alteracao/historico-alteracao.service';
+import { KafkaProducerService } from '../kafka/producer.service';
 
 const createSalaDto: CreateSalaDto = {
   numero: 1,
@@ -53,11 +53,11 @@ describe('SalaService', () => {
 
   let salaRepository: Repository<Sala>;
 
-  let historicoAlteracaoService: Partial<HistoricoAlteracaoService>;
+  let kafkaProducerService: Partial<KafkaProducerService>;
 
   beforeEach(async () => {
-    historicoAlteracaoService = {
-      create: jest.fn(),
+    kafkaProducerService = {
+      sendMessageToHistoricoAlteracao: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -68,8 +68,8 @@ describe('SalaService', () => {
           useClass: Repository,
         },
         {
-          provide: HistoricoAlteracaoService,
-          useValue: historicoAlteracaoService,
+          provide: KafkaProducerService,
+          useValue: kafkaProducerService,
         },
       ],
     }).compile();
@@ -129,13 +129,18 @@ describe('SalaService', () => {
       await service.update(id, updateSalaDto, userId);
       expect(salaRepository.findOneByOrFail).toHaveBeenCalledWith({ id });
       expect(salaRepository.update).toHaveBeenCalledWith(id, expect.any(Sala));
-      expect(historicoAlteracaoService.create).toHaveBeenCalledTimes(1);
-      expect(historicoAlteracaoService.create).toHaveBeenCalledWith({
+      expect(
+        kafkaProducerService.sendMessageToHistoricoAlteracao,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        kafkaProducerService.sendMessageToHistoricoAlteracao,
+      ).toHaveBeenCalledWith({
         campo: 'capacidade',
         valorAntigo: 25,
         valorNovo: 99,
         usuario_id: userId,
         sala_id: id,
+        flow_id: expect.any(String),
       });
     });
     it('should not create historico de alteracao when sala is not updated', async () => {
@@ -152,7 +157,9 @@ describe('SalaService', () => {
       await service.update(id, updateSalaDto, userId);
       expect(salaRepository.findOneByOrFail).toHaveBeenCalledWith({ id });
       expect(salaRepository.update).toHaveBeenCalledWith(id, expect.any(Sala));
-      expect(historicoAlteracaoService.create).not.toHaveBeenCalled();
+      expect(
+        kafkaProducerService.sendMessageToHistoricoAlteracao,
+      ).not.toHaveBeenCalled();
     });
   });
   describe('deactivate', () => {

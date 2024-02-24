@@ -4,13 +4,13 @@ import { SalaController } from './sala.controller';
 import { Sala } from './entities/sala.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HistoricoAlteracaoModule } from 'src/historico-alteracao/historico-alteracao.module';
+import { KafkaModule } from 'src/kafka/kafka.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Sala]),
     forwardRef(() => AuthModule),
-    HistoricoAlteracaoModule,
+    KafkaModule,
   ],
   controllers: [SalaController],
   providers: [SalaService],

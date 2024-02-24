@@ -15,6 +15,7 @@ const mockHistoricoAlteracao: HistoricoAlteracao = {
   usuario: Usuario.comId('1'),
   sala: Sala.comId('1'),
   createdAt: new Date(),
+  flowId: '1',
 };
 
 describe('HistoricoAlteracaoService', () => {
@@ -49,15 +50,21 @@ describe('HistoricoAlteracaoService', () => {
         campo: 'Campo',
         valorAntigo: 'Valor Antigo',
         valorNovo: 'Valor Novo',
+        flow_id: '1',
       };
 
-      jest.spyOn(repository, 'save').mockResolvedValue(mockHistoricoAlteracao);
+      jest.spyOn(repository, 'upsert').mockResolvedValueOnce({
+        identifiers: [{ id: 1 }],
+        generatedMaps: [{ id: 1 }],
+        raw: {},
+      });
 
       const result = await service.create(createDto);
 
-      expect(result).toBe(mockHistoricoAlteracao);
-      expect(repository.save).toHaveBeenCalledWith(
+      expect(result).toBeDefined();
+      expect(repository.upsert).toHaveBeenCalledWith(
         expect.any(HistoricoAlteracao),
+        expect.any(Object),
       );
     });
   });
