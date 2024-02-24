@@ -25,7 +25,7 @@ describe('KafkaConsumerService', () => {
     expect(consumerMock.connect).toHaveBeenCalled();
     expect(consumerMock.subscribe).toHaveBeenCalledWith({
       topic: 'HISTORICO-ALTERACAO',
-      fromBeginning: true,
+      fromBeginning: false,
     });
     expect(consumerMock.run).toHaveBeenCalled();
   });

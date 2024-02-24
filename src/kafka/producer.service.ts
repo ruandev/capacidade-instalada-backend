@@ -1,14 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Producer } from 'kafkajs';
+import { Kafka, Producer } from 'kafkajs';
 import { CreateHistoricoAlteracaoDto } from '../historico-alteracao/dto/create-historico-alteracao.dto';
-import { kafkaConfig } from './config';
 
 @Injectable()
 export class KafkaProducerService {
   private producer: Producer;
 
   constructor() {
-    this.producer = kafkaConfig.producer();
+    const config = new Kafka({
+      brokers: [process.env.KAFKA_BROKER],
+      ssl: true,
+      sasl: {
+        mechanism: 'scram-sha-256',
+        username: process.env.KAFKA_USERNAME,
+        password: process.env.KAFKA_PASSWORD,
+      },
+    });
+
+    this.producer = config.producer();
   }
 
   async onModuleInit(): Promise<void> {

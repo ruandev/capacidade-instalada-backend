@@ -24,8 +24,8 @@ import { KafkaModule } from './kafka/kafka.module';
       entities: ['dist/src/**/*/*.entity.ts'],
       autoLoadEntities: true,
       synchronize: true,
-      verboseRetryLog: true,
-      logging: true,
+      verboseRetryLog: false,
+      logging: false,
       ssl: {
         rejectUnauthorized: false,
       },
