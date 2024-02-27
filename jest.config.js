@@ -20,8 +20,10 @@ const config = {
     '!**/*.enum.ts',
     '!**/*.decorator.ts',
     '!**/*.guard.ts',
-    '!main.ts',
-  ]
+    '!src/main.ts',
+    '!src/config/**/*',
+    '!dist/**/*',
+  ],
 };
 
 module.exports = config;
