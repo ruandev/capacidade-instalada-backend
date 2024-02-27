@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConditionalModule, ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { NucleoModule } from './nucleo/nucleo.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
@@ -11,7 +11,6 @@ import { SalaModule } from './sala/sala.module';
 import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
 import { KafkaModule } from './kafka/kafka.module';
 import { AppController } from './app.controller';
-import * as Joi from 'joi';
 
 @Module({
   imports: [
