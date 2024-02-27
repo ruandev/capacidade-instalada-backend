@@ -1,6 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from './jwt.strategy';
 
+jest.mock('../config/app.config', () => ({
+  default: jest.fn(() => {
+    return {
+      appSecret: 'your_secret_here',
+    };
+  }),
+}));
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
 
