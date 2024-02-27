@@ -1,18 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { NucleoController } from './nucleo/nucleo.controller';
-import { NucleoService } from './nucleo/nucleo.service';
 import { NucleoModule } from './nucleo/nucleo.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { EscolaModule } from './escola/escola.module';
+import { ModalidadeModule } from './modalidade/modalidade.module';
+import { SerieModule } from './serie/serie.module';
+import { SalaModule } from './sala/sala.module';
+import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
+import { KafkaModule } from './kafka/kafka.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -20,19 +24,26 @@ import { EscolaModule } from './escola/escola.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [],
+      entities: ['dist/src/**/*/*.entity.ts'],
+      autoLoadEntities: true,
       synchronize: true,
-      logging: true,
+      verboseRetryLog: false,
+      logging: false,
       ssl: {
         rejectUnauthorized: false,
       },
     }),
-    UsuarioModule,
     AuthModule,
+    UsuarioModule,
     NucleoModule,
     EscolaModule,
+    ModalidadeModule,
+    SerieModule,
+    SalaModule,
+    HistoricoAlteracaoModule,
+    KafkaModule,
   ],
-  controllers: [AppController, NucleoController],
-  providers: [AppService, NucleoService],
+  controllers: [AppController],
+  providers: [],
 })
 export class AppModule {}

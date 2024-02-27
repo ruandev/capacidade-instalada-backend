@@ -22,6 +22,7 @@ describe('AuthService', () => {
           provide: UsuarioService,
           useValue: {
             findOne: jest.fn(),
+            findByCPF: jest.fn(),
           },
         },
         {
@@ -52,7 +53,7 @@ describe('AuthService', () => {
       };
       const mockJwtToken = 'mock_jwt_token';
 
-      jest.spyOn(usuarioService, 'findOne').mockResolvedValue(mockUser);
+      jest.spyOn(usuarioService, 'findByCPF').mockResolvedValue(mockUser);
       jest.spyOn(bcrypt, 'compareSync').mockReturnValue(true);
       jest.spyOn(jwtService, 'sign').mockReturnValue(mockJwtToken);
 

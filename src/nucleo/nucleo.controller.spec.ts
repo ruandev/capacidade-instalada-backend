@@ -6,14 +6,14 @@ import { CreateNucleoDto } from './dto/create-nucleo.dto';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Role } from '../auth/role.enum';
 import { AuthService } from '../auth/auth.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Nucleo } from './entities/nucleo.entity';
 import { Repository } from 'typeorm';
 import { UpdateNucleoDto } from './dto/update-nucleo.dto';
+import { EscolaService } from '../escola/escola.service';
+import { Escola } from '../escola/entities/escola.entity';
 
-// Mock AuthService para retornar um usuário com Role.Admin
 @Injectable()
 class MockAuthService {
   validateUser(user: any) {
@@ -37,6 +37,8 @@ describe('NucleoController', () => {
 
   let service: NucleoService;
 
+  let escolaService: EscolaService;
+
   let testingModule: TestingModule;
 
   beforeEach(async () => {
@@ -44,6 +46,7 @@ describe('NucleoController', () => {
       controllers: [NucleoController],
       providers: [
         NucleoService,
+        EscolaService,
         {
           provide: AuthService,
           useClass: MockAuthService,
@@ -56,10 +59,15 @@ describe('NucleoController', () => {
           provide: getRepositoryToken(Nucleo),
           useClass: Repository,
         },
+        {
+          provide: getRepositoryToken(Escola),
+          useClass: Repository,
+        },
       ],
     }).compile();
     controller = testingModule.get<NucleoController>(NucleoController);
     service = testingModule.get<NucleoService>(NucleoService);
+    escolaService = testingModule.get<EscolaService>(EscolaService);
   });
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -67,7 +75,7 @@ describe('NucleoController', () => {
   describe('create', () => {
     it('should create a new nucleo', async () => {
       const dto: CreateNucleoDto = { nome: 'Nucleo 1' };
-      const result = { id: '1', ...dto, ativo: true };
+      const result = { id: '1', ...dto, ativo: true, escolas: [] };
 
       jest.spyOn(service, 'create').mockResolvedValue(result);
       expect(await controller.create(dto)).toBe(result);
@@ -82,7 +90,7 @@ describe('NucleoController', () => {
   });
   describe('findAll', () => {
     it('should return an array of nucleos', async () => {
-      const result = [{ id: '1', nome: 'Nucleo 1', ativo: true }];
+      const result = [{ id: '1', nome: 'Nucleo 1', ativo: true, escolas: [] }];
 
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       expect(await controller.findAll()).toBe(result);
@@ -90,7 +98,7 @@ describe('NucleoController', () => {
   });
   describe('findOne', () => {
     it('should return a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: true };
+      const result = { id: '1', nome: 'Nucleo 1', ativo: true, escolas: [] };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(result);
       expect(await controller.findOne('1')).toBe(result);
@@ -99,7 +107,12 @@ describe('NucleoController', () => {
   describe('update', () => {
     it('should update a nucleo by ID', async () => {
       const dto: UpdateNucleoDto = { nome: 'Updated Nucleo' };
-      const result = { id: '1', nome: 'Updated Nucleo', ativo: true };
+      const result = {
+        id: '1',
+        nome: 'Updated Nucleo',
+        ativo: true,
+        escolas: [],
+      };
 
       jest.spyOn(service, 'update').mockResolvedValue(result);
       expect(await controller.update('1', dto)).toBe(result);
@@ -113,7 +126,7 @@ describe('NucleoController', () => {
   });
   describe('deactivate', () => {
     it('should deactivate a nucleo by ID', async () => {
-      const result = { id: '1', nome: 'Nucleo 1', ativo: false };
+      const result = { id: '1', nome: 'Nucleo 1', ativo: false, escolas: [] };
 
       jest.spyOn(service, 'deactivate').mockResolvedValue(result);
       expect(await controller.deactivate('1')).toBe(result);
@@ -123,6 +136,21 @@ describe('NucleoController', () => {
 
       jest.spyOn(mockRolesGuard, 'canActivate').mockReturnValue(false);
       await expect(controller.deactivate('1')).rejects.toThrow();
+    });
+  });
+  describe('findEscolasByNucleo', () => {
+    it('should call findEscolasByNucleo from EscolaService and return result', async () => {
+      const mockId = 'mock-id';
+      const mockResult = [new Escola(), new Escola()];
+
+      jest
+        .spyOn(escolaService, 'findEscolasByNucleo')
+        .mockResolvedValueOnce(mockResult);
+
+      const result = await controller.findEscolasByNucleo(mockId);
+
+      expect(result).toBe(mockResult);
+      expect(escolaService.findEscolasByNucleo).toHaveBeenCalledWith(mockId);
     });
   });
 });

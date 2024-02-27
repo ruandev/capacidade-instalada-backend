@@ -26,7 +26,9 @@ export class UsuarioService {
   }
 
   async findAll() {
-    return await this.usuarioRepository.find();
+    return await this.usuarioRepository.find({
+      select: ['id', 'nome', 'cpf', 'role', 'ativo'],
+    });
   }
 
   async findOne(id: string) {
