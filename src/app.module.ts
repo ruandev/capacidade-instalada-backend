@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConditionalModule, ConfigModule } from '@nestjs/config';
 import { NucleoModule } from './nucleo/nucleo.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
@@ -10,10 +10,14 @@ import { SerieModule } from './serie/serie.module';
 import { SalaModule } from './sala/sala.module';
 import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
 import { KafkaModule } from './kafka/kafka.module';
+import { AppController } from './app.controller';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -30,8 +34,8 @@ import { KafkaModule } from './kafka/kafka.module';
         rejectUnauthorized: false,
       },
     }),
-    UsuarioModule,
     AuthModule,
+    UsuarioModule,
     NucleoModule,
     EscolaModule,
     ModalidadeModule,
@@ -40,7 +44,7 @@ import { KafkaModule } from './kafka/kafka.module';
     HistoricoAlteracaoModule,
     KafkaModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

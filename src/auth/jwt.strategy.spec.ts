@@ -1,21 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from './jwt.strategy';
-import { ConfigService } from '@nestjs/config';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        JwtStrategy,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: jest.fn().mockReturnValue('test-jwt-secret'),
-          },
-        },
-      ],
+      providers: [JwtStrategy],
     }).compile();
 
     jwtStrategy = module.get<JwtStrategy>(JwtStrategy);

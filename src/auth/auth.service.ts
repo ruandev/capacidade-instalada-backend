@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt-updated';
@@ -13,7 +13,7 @@ export class AuthService {
 
   async validateUser(cpf: string, pass: string): Promise<any> {
     try {
-      const user: Usuario = await this.usuarioService.findOne(cpf);
+      const user: Usuario = await this.usuarioService.findByCPF(cpf);
 
       if (!user) {
         throw new UnauthorizedException();

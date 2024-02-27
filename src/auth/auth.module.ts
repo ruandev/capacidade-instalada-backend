@@ -6,16 +6,14 @@ import { UsuarioModule } from '../usuario/usuario.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { jwtConfig } from 'src/config/jwt.config';
 
 @Module({
   imports: [
     forwardRef(() => UsuarioModule),
     ConfigModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '200000h' },
-    }),
+    JwtModule.registerAsync(jwtConfig),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
