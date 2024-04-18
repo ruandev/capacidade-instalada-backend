@@ -17,7 +17,7 @@ import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('sala')
+@Controller('salas')
 export class SalaController {
   constructor(private readonly salaService: SalaService) {}
 

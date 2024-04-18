@@ -16,7 +16,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.enum';
 
-@Controller('escola')
+@Controller('escolas')
 export class EscolaController {
   constructor(private readonly escolaService: EscolaService) {}
 

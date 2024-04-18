@@ -7,6 +7,9 @@ import {
   Param,
   Put,
   UseGuards,
+  Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { ModalidadeService } from './modalidade.service';
 import { CreateModalidadeDto } from './dto/create-modalidade.dto';
@@ -16,12 +19,22 @@ import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('modalidade')
+@Controller('modalidades')
 export class ModalidadeController {
   constructor(private readonly modalidadeService: ModalidadeService) {}
 
   @Get()
-  findAll() {
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  findAll(
+    @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
+    ativos: boolean,
+  ) {
+    if (ativos) {
+      return this.modalidadeService.findAllActives();
+    }
+
     return this.modalidadeService.findAll();
   }
 
@@ -55,5 +68,13 @@ export class ModalidadeController {
   @UseGuards(JwtAuthGuard)
   deactivate(@Param('id') id: string) {
     return this.modalidadeService.deactivate(id);
+  }
+
+  @Put(':id/activate')
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  activate(@Param('id') id: string) {
+    return this.modalidadeService.activate(id);
   }
 }
