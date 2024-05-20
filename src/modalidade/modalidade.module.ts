@@ -12,5 +12,6 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   controllers: [ModalidadeController],
   providers: [ModalidadeService],
+  exports: [ModalidadeService],
 })
 export class ModalidadeModule {}
