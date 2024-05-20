@@ -46,4 +46,10 @@ export class ModalidadeService {
 
     return await this.modalidadeRepository.findOneByOrFail({ id });
   }
+
+  async activate(id: string) {
+    await this.modalidadeRepository.update({ id }, { ativo: true });
+
+    return await this.modalidadeRepository.findOneByOrFail({ id });
+  }
 }

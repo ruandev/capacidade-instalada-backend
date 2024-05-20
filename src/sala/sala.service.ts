@@ -47,7 +47,23 @@ export class SalaService {
   }
 
   async findAll() {
-    return await this.salaRepository.find();
+    return await this.salaRepository.find({
+      select: {
+        id: true,
+        numero: true,
+        turno: true,
+        ativo: true,
+        escola: { id: true, nome: true },
+        serie: { id: true, nome: true },
+      },
+      relations: ['escola', 'serie'],
+      order: {
+        escola: {
+          nome: 'ASC',
+        },
+        numero: 'ASC',
+      },
+    });
   }
 
   async findOne(id: string) {

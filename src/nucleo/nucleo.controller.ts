@@ -7,6 +7,9 @@ import {
   Param,
   Put,
   UseGuards,
+  Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { NucleoService } from './nucleo.service';
 import { CreateNucleoDto } from './dto/create-nucleo.dto';
@@ -28,7 +31,14 @@ export class NucleoController {
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  findAll() {
+  findAll(
+    @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
+    ativos: boolean,
+  ) {
+    if (ativos) {
+      return this.nucleoService.findAllActives();
+    }
+
     return this.nucleoService.findAll();
   }
 

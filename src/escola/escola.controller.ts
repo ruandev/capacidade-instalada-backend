@@ -7,6 +7,9 @@ import {
   Param,
   Put,
   UseGuards,
+  Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { EscolaService } from './escola.service';
 import { CreateEscolaDto } from './dto/create-escola.dto';
@@ -16,7 +19,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.enum';
 
-@Controller('escola')
+@Controller('escolas')
 export class EscolaController {
   constructor(private readonly escolaService: EscolaService) {}
 
@@ -40,7 +43,14 @@ export class EscolaController {
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  findAll() {
+  findAll(
+    @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
+    ativos: boolean,
+  ) {
+    if (ativos) {
+      return this.escolaService.findAllActives();
+    }
+
     return this.escolaService.findAll();
   }
 
@@ -52,11 +62,11 @@ export class EscolaController {
     return this.escolaService.update(id, updateEscolaDto);
   }
 
-  @Put(':id')
+  @Put(':id/toggle-status')
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
-    return this.escolaService.deactivate(id);
+    return this.escolaService.toggleStatus(id);
   }
 }

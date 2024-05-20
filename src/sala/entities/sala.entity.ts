@@ -31,28 +31,28 @@ export class Sala {
   @Column()
   matriculaInicial: number;
 
-  @Column()
+  @Column({ default: 0 })
   especiais: number;
 
-  @Column()
+  @Column({ default: 0 })
   matriculaCancelada: number;
 
-  @Column()
+  @Column({ default: 0 })
   transferidos: number;
 
-  @Column()
+  @Column({ default: 0 })
   evadidos: number;
 
-  @Column()
+  @Column({ default: 0 })
   matriculaEfetiva: number;
 
-  @Column()
+  @Column({ default: 0 })
   naoRenovaram: number;
 
-  @Column()
+  @Column({ default: 0 })
   intraRede: number;
 
-  @Column()
+  @Column({ default: 0 })
   projecao: number;
 
   @Column()
