@@ -67,7 +67,13 @@ export class SalaService {
   }
 
   async findOne(id: string) {
-    return await this.salaRepository.findOneByOrFail({ id });
+    return await this.salaRepository.findOneOrFail({
+      where: { id },
+      relations: {
+        escola: true,
+        serie: true,
+      },
+    });
   }
 
   async update(id: string, updateSalaDto: UpdateSalaDto, userId: string) {
@@ -120,9 +126,15 @@ export class SalaService {
     return salaAtualizada;
   }
 
-  async deactivate(id: string) {
-    await this.salaRepository.update({ id }, { ativo: false });
+  async toggleStatus(id: string) {
+    const result = await this.salaRepository
+      .createQueryBuilder()
+      .update('Sala')
+      .set({ ativo: () => 'NOT ativo' })
+      .where('id = :id', { id })
+      .returning(['id', 'nome', 'ativo'])
+      .execute();
 
-    return await this.salaRepository.findOneByOrFail({ id });
+    return result.raw[0];
   }
 }

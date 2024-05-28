@@ -51,11 +51,11 @@ export class SalaController {
     return this.salaService.update(id, updateSalaDto, req.user.id);
   }
 
-  @Put(':id/deactivate')
+  @Put(':id/toggle-status')
   @HasRoles(Role.ADMIN, Role.SECRETARIA)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   deactivate(@Param('id') id: string) {
-    return this.salaService.deactivate(id);
+    return this.salaService.toggleStatus(id);
   }
 }
