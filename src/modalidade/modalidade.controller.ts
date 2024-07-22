@@ -36,9 +36,6 @@ export class ModalidadeController {
     @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
     ativos: boolean,
   ) {
-    this.counter++;
-    console.log(this.counter);
-
     if (ativos) {
       return this.modalidadeService.findAllActives();
     }

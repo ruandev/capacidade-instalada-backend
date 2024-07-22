@@ -28,7 +28,6 @@ import * as redisStore from 'cache-manager-redis-store';
       username: 'default',
       password: 'xru6HyFAsRvhKEBoMBSzmkfyJ3zUTh8j',
     }),
-
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
