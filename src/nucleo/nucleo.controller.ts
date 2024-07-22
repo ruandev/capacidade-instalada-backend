@@ -10,6 +10,7 @@ import {
   Query,
   DefaultValuePipe,
   ParseBoolPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { NucleoService } from './nucleo.service';
 import { CreateNucleoDto } from './dto/create-nucleo.dto';
@@ -19,6 +20,7 @@ import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { EscolaService } from '../escola/escola.service';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('nucleos')
 export class NucleoController {
@@ -28,6 +30,7 @@ export class NucleoController {
   ) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
@@ -51,6 +54,7 @@ export class NucleoController {
   }
 
   @Get(':id/escolas')
+  @UseInterceptors(CacheInterceptor)
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
