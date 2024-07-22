@@ -48,7 +48,7 @@ export class SalaController {
     @Body() updateSalaDto: UpdateSalaDto,
     @Request() req: any,
   ) {
-    return this.salaService.update(id, updateSalaDto, req.user.id);
+    return this.salaService.update(id, updateSalaDto, req.user.userId);
   }
 
   @Put(':id/toggle-status')
@@ -57,5 +57,13 @@ export class SalaController {
   @UseGuards(JwtAuthGuard)
   deactivate(@Param('id') id: string) {
     return this.salaService.toggleStatus(id);
+  }
+
+  @Get(':id/historic')
+  @HasRoles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  historic(@Param('id') id: string) {
+    return this.salaService.historic(id);
   }
 }

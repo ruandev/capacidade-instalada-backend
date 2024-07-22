@@ -10,6 +10,7 @@ import {
   Query,
   DefaultValuePipe,
   ParseBoolPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ModalidadeService } from './modalidade.service';
 import { CreateModalidadeDto } from './dto/create-modalidade.dto';
@@ -18,12 +19,16 @@ import { HasRoles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('modalidades')
 export class ModalidadeController {
+  counter = 0;
   constructor(private readonly modalidadeService: ModalidadeService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('modalidades')
   @HasRoles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
@@ -31,6 +36,9 @@ export class ModalidadeController {
     @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
     ativos: boolean,
   ) {
+    this.counter++;
+    console.log(this.counter);
+
     if (ativos) {
       return this.modalidadeService.findAllActives();
     }

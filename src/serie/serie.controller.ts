@@ -10,6 +10,7 @@ import {
   Query,
   DefaultValuePipe,
   ParseBoolPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SerieService } from './serie.service';
 import { CreateSerieDto } from './dto/create-serie.dto';
@@ -18,12 +19,14 @@ import { HasRoles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('series')
 export class SerieController {
   constructor(private readonly serieService: SerieService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   findAll(
     @Query('ativos', new DefaultValuePipe(false), ParseBoolPipe)
     ativos: boolean,

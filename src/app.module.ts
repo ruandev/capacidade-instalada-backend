@@ -11,12 +11,24 @@ import { SalaModule } from './sala/sala.module';
 import { HistoricoAlteracaoModule } from './historico-alteracao/historico-alteracao.module';
 import { KafkaModule } from './kafka/kafka.module';
 import { AppController } from './app.controller';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60000,
+      store: redisStore,
+      host: 'redis-16401.c256.us-east-1-2.ec2.redns.redis-cloud.com',
+      port: 16401,
+      username: 'default',
+      password: 'xru6HyFAsRvhKEBoMBSzmkfyJ3zUTh8j',
+    }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

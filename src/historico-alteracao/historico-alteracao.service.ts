@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateHistoricoAlteracaoDto } from './dto/create-historico-alteracao.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HistoricoAlteracao } from './entities/historico-alteracao.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Sala } from '../sala/entities/sala.entity';
 
@@ -46,7 +46,24 @@ export class HistoricoAlteracaoService {
   }
 
   async findBySala(id: string) {
-    return await this.historicoAlteracaoRepository.findBy({ sala: { id } });
+    return await this.historicoAlteracaoRepository.find({
+      select: {
+        campo: true,
+        valorAntigo: true,
+        valorNovo: true,
+        createdAt: true,
+        usuario: {
+          nome: true,
+        },
+      },
+      where: {
+        sala: {
+          id: id,
+        },
+        campo: Not('updatedAt'),
+      },
+      relations: ['usuario'],
+    });
   }
 
   async findByUsuario(id: string) {

@@ -10,6 +10,7 @@ import { Serie } from '../serie/entities/serie.entity';
 import { CreateHistoricoAlteracaoDto } from '../historico-alteracao/dto/create-historico-alteracao.dto';
 import { KafkaProducerService } from '../kafka/producer.service';
 import { randomUUID } from 'crypto';
+import { HistoricoAlteracaoService } from 'src/historico-alteracao/historico-alteracao.service';
 
 @Injectable()
 export class SalaService {
@@ -17,6 +18,7 @@ export class SalaService {
     @InjectRepository(Sala)
     private salaRepository: Repository<Sala>,
     private readonly kafkaProducerService: KafkaProducerService,
+    private readonly historicoAlteracaoService: HistoricoAlteracaoService,
   ) {}
 
   async create(createSalaDto: CreateSalaDto) {
@@ -136,5 +138,11 @@ export class SalaService {
       .execute();
 
     return result.raw[0];
+  }
+
+  async historic(id: string) {
+    const result = await this.historicoAlteracaoService.findBySala(id);
+
+    return result;
   }
 }
