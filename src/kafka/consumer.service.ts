@@ -23,12 +23,12 @@ export class KafkaConsumerService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleInit(): Promise<void> {
-    // await this.connectAndSubscribe(
-    //   'HISTORICO-ALTERACAO',
-    //   async (message: KafkaMessage) => {
-    //     await this.processMessage(message);
-    //   },
-    // );
+    await this.connectAndSubscribe(
+      'HISTORICO-ALTERACAO',
+      async (message: KafkaMessage) => {
+        await this.processMessage(message);
+      },
+    );
   }
 
   async onModuleDestroy(): Promise<void> {
