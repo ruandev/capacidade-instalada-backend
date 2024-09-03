@@ -33,7 +33,7 @@
     "bcrypt-updated": "^5.0.12",
     "cache-manager": "^5.5.3",
     "cache-manager-redis-store": "2",
-    "cache-manager-redis-yet": "^5.0.1",
+    "cache-manager-redis-yet": "^5.1.4",
     "class-validator": "^0.14.1",
     "kafkajs": "^2.2.4",
     "passport": "^0.7.0",
