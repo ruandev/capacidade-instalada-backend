@@ -28,7 +28,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^10.4.1",
     "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.4.0",
+    "@nestjs/platform-express": "^10.4.2",
     "@nestjs/typeorm": "^10.0.2",
     "bcrypt-updated": "^5.0.12",
     "cache-manager": "^5.5.3",
