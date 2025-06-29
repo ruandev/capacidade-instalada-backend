@@ -3,6 +3,9 @@ name: Test and Coverage Check
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test-and-coverage:
     runs-on: ubuntu-latest
